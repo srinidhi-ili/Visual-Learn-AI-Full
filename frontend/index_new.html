@@ -1,0 +1,401 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+<title>Visual Learn AI</title>
+
+<style>
+
+body{
+    font-family: Arial, sans-serif;
+    background:#eef2ff;
+    padding:30px;
+    margin:0;
+}
+
+.hero{
+    text-align:center;
+    margin-bottom:10px;
+}
+
+h1{
+    text-align:center;
+    color:#1e3a8a;
+    font-size:34px;
+    margin-bottom:10px;
+}
+
+.hero p{
+    text-align:center;
+    color:#555;
+    font-size:18px;
+    margin-top:0;
+    margin-bottom:20px;
+}
+
+.top-bar{
+    background:white;
+    padding:15px;
+    border-radius:15px;
+    text-align:center;
+    margin-bottom:25px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.08);
+}
+
+input[type="file"]{
+    margin-right:15px;
+}
+
+button{
+    padding:12px 30px;
+    background:#2563eb;
+    color:white;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:bold;
+    font-size:15px;
+}
+
+button:hover{
+    background:#1d4ed8;
+}
+
+.card{
+    background:white;
+    padding:25px;
+    margin-bottom:25px;
+    border-radius:18px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.08);
+}
+
+.card h2{
+    color:#1e3a8a;
+}
+
+.voice{
+    background:#dbeafe;
+    color:#1e3a8a;
+    padding:15px;
+    border-radius:12px;
+    border-left:5px solid #2563eb;
+    line-height:1.6;
+    white-space: pre-line;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.status{
+    font-size:18px;
+    line-height:2;
+}
+
+img{
+    display:block;
+    margin:auto;
+    width:80%;
+    max-width:700px;
+    border-radius:15px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.2);
+}
+
+audio{
+    width:100%;
+}
+
+video{
+    width:100%;
+    max-width:800px;
+    display:block;
+    margin:auto;
+    border-radius:15px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.2);
+}
+
+.workflow h2{
+    color:#1e3a8a;
+}
+
+.features{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    flex-wrap:wrap;
+    margin-top:25px;
+}
+
+.feature-box{
+    background:#eef4ff;
+    padding:20px;
+    width:150px;
+    text-align:center;
+    border-radius:12px;
+    font-weight:bold;
+    color:#1e3a8a;
+    box-shadow:0 3px 10px rgba(0,0,0,0.05);
+    transition:0.3s;
+}
+.scene-image{
+    width:350px;
+    height:220px;
+    object-fit:cover;
+    border-radius:12px;
+    display:block;
+    margin:auto;
+    box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+
+footer{
+    text-align:center;
+    margin-top:40px;
+    color:#666;
+}
+
+</style>
+
+</style>
+
+</head>
+
+<body>
+
+<div class="hero">
+
+    <h1>🎓 Visual Learn AI</h1>
+
+    <p>
+        Convert theory content into
+        AI-powered visual learning videos with
+        narration and subtitles.
+    </p>
+
+</div>
+
+
+<div class="top-bar">
+
+<h2>📁 Upload Learning Material</h2>
+
+<p>
+Upload a PDF and PPT file to generate
+an educational video automatically.
+</p>
+
+<input type="file" id="fileInput">
+
+<button id="uploadBtn" type="button">
+Upload
+</button>
+
+</div>
+
+<div id="result">
+
+<div class="card">
+
+<h2>🚀 Welcome to Visual Learn AI</h2>
+
+<p>
+Upload your theory materials and generate:
+</p>
+
+<div class="features">
+
+    <div class="feature-box">
+        📄<br><br>
+        Content Extraction
+    </div>
+
+    <div class="feature-box">
+        📝<br><br>
+        key Point Generation
+    </div>
+
+    <div class="feature-box">
+        📊<br><br>
+        Flowchart Visualization
+    </div>
+
+    <div class="feature-box">
+        🎤<br><br>
+        Voice Narration
+    </div>
+
+    <div class="feature-box">
+        📹<br><br>
+        Final Educational Video
+    </div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const uploadBtn =
+document.getElementById("uploadBtn");
+
+const result =
+document.getElementById("result");
+
+uploadBtn.addEventListener(
+    "click",
+    async function(){
+
+        const file =
+        document.getElementById("fileInput").files[0];
+
+        if(!file){
+
+            alert("Please select a file");
+            return;
+        }
+
+        result.innerHTML = `
+<div class="card status">
+⏳ Extracting Content...<br><br>
+🎬 Generating Scenes...<br><br>
+🎤 Creating Narration...<br><br>
+📹 Building Video...
+</div>
+`;
+
+        const formData = new FormData();
+
+        formData.append(
+            "file",
+            file
+        );
+
+        try{
+
+            const response =
+            await fetch(
+                "http://127.0.0.1:5000/upload",
+                {
+                    method:"POST",
+                    body:formData
+                }
+            );
+
+            const data =
+            await response.json();
+            console.log(data);
+
+            let html = "";
+
+            if (!data.scenes) {
+    result.innerHTML =
+    `<div class="card">
+        Backend Error:
+        ${JSON.stringify(data)}
+    </div>`;
+    return;
+}
+
+data.scenes.forEach(scene => {
+
+                html += `
+                <div class="card">
+
+                    <h2>🎬 Scene ${scene.scene}</h2>
+
+                    <h3>${scene.title}</h3>
+
+<h4>📝 Main Points</h4>
+
+<div class="voice">
+${scene.voice_text}
+</div>
+
+
+
+
+
+
+<br>
+
+<h4>🖼️ Visual Representation</h4>
+
+                    <br>
+
+                    <img
+class="scene-image"
+src="http://127.0.0.1:5000/image/${scene.image_url}">
+
+
+                    <br><br>
+
+                    <audio controls>
+                        <source
+                        src="http://127.0.0.1:5000/${scene.audio_file}"
+                        type="audio/mpeg">
+                    </audio>
+
+                </div>
+                `;
+            });
+
+            html += `
+            <div class="card">
+
+                <h2>🎉 Final Educational Video Ready</h2>
+
+<p>
+Your AI-powered visual learning video has been generated successfully.
+</p>
+
+                <video controls width="500">
+
+                    <source
+                    src="http://127.0.0.1:5000/video/final_video.mp4"
+                    type="video/mp4">
+
+                </video>
+
+                <br><br>
+
+                <a
+                href="http://127.0.0.1:5000/video/final_video.mp4"
+                download>
+
+                    <button>
+                        Download Final Video
+                    </button>
+
+                </a>
+
+            </div>
+            `;
+            
+
+            result.innerHTML = html;
+
+        }
+        catch(error){
+
+            console.error(error);
+
+            result.innerHTML =
+            `
+            <div class="card">
+                Error:
+                ${error}
+            </div>
+            `;
+        }
+
+    }
+);
+
+</script>
+<footer>
+Built by Srinidhi Ili 
+</footer>
+</body>
+</html>
