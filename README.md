@@ -163,6 +163,12 @@ in your browser.
 ![Video Generation](final.proj4.png)
 
 ---
+## 🎥 Demo Video
+
+Watch the project demonstration:
+
+[Visual Learn AI Demo](https://drive.google.com/file/d/1rHDGksxXhptW-DbPFCZwZBgYECfxx_t0/view?usp=sharing)
+---
 
 ## 👨‍💻 Author
 
