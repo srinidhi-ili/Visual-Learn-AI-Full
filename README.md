@@ -151,18 +151,16 @@ in your browser.
 ## 📸 Screenshots
 
 ### Upload Interface
-
-final.proj1.png
+![Upload Interface](final.proj1.png)
 
 ### Generated Learning Scene
-
-final.proj2.png
+![Generated Learning Scene](final.proj2.png)
 
 ### Audio Narration
+![Audio Narration](final.proj3.png)
 
-final.proj3.png
-final.proj4.png
-
+### Video Generation
+![Video Generation](final.proj4.png)
 
 ---
 
