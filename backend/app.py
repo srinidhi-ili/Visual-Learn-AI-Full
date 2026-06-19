@@ -1,7 +1,5 @@
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
-print("APP.PY LOADED")
-
 import os
 from pptx import Presentation
 import PyPDF2
@@ -17,49 +15,36 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 @app.route("/")
 def home():
-
     return "Visual Learn AI Backend Running"
 
 
 @app.route("/audio/<filename>")
 def serve_audio(filename):
-
     return send_from_directory(
         "audio",
-        filename
+        filename,
+        mimetype="audio/mpeg"
     )
-@app.route("/video/<filename>")
-def serve_video(filename):
 
-    return send_from_directory(
-        ".",
-        filename
-    )
+
 @app.route("/image/<filename>")
 def serve_image(filename):
+    return send_from_directory(".", filename)
 
-    return send_from_directory(
-        ".",
-        filename
-    )
+
 def extract_ppt_text(path):
 
     prs = Presentation(path)
 
     text = ""
 
-    for slide_no, slide in enumerate(prs.slides, start=1):
-
-        print("\nSLIDE", slide_no)
+    for slide in prs.slides:
 
         text += "\n===SLIDE===\n"
 
         for shape in slide.shapes:
 
             if hasattr(shape, "text"):
-
-                print("SHAPE:", shape.text[:100])
-
                 text += shape.text + "\n"
 
     return text
@@ -78,7 +63,6 @@ def extract_pdf_text(path):
             page_text = page.extract_text()
 
             if page_text:
-
                 text += page_text + "\n"
 
     return text
@@ -99,17 +83,12 @@ def extract_txt_text(path):
 def upload():
 
     if "file" not in request.files:
-
-        return jsonify({
-            "error": "No file received"
-        })
+        return jsonify({"error": "No file received"})
 
     file = request.files["file"]
-    if file.filename == "":
 
-        return jsonify({
-            "error": "No file selected"
-        })
+    if file.filename == "":
+        return jsonify({"error": "No file selected"})
 
     filepath = os.path.join(
         UPLOAD_FOLDER,
@@ -118,28 +97,20 @@ def upload():
 
     file.save(filepath)
 
-    extension = (
-        file.filename
-        .split(".")[-1]
-        .lower()
-    )
+    extension = file.filename.split(".")[-1].lower()
 
     try:
 
         if extension == "pptx":
-
             text = extract_ppt_text(filepath)
 
         elif extension == "pdf":
-
             text = extract_pdf_text(filepath)
 
         elif extension == "txt":
-
             text = extract_txt_text(filepath)
 
         else:
-
             return jsonify({
                 "error": f"Unsupported file type: {extension}"
             })
@@ -158,10 +129,5 @@ def upload():
         })
 
 
-import os
-
 if __name__ == "__main__":
-    app.run(
-        host="0.0.0.0",
-        port=int(os.environ.get("PORT", 5000))
-    )
+    app.run(debug=True)

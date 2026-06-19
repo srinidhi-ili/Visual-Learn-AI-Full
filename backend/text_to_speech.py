@@ -5,16 +5,12 @@ def text_to_speech(text, filename):
 
     os.makedirs("audio", exist_ok=True)
 
-    filepath = os.path.join(
-        "audio",
-        filename
-    )
+    filepath = os.path.join("audio", filename)
 
-    tts = gTTS(
+    gTTS(
         text=text,
-        lang="en"
-    )
-
-    tts.save(filepath)
+        lang="en",
+        slow=False
+    ).save(filepath)
 
     return filepath

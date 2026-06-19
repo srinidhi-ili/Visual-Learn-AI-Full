@@ -1,16 +1,13 @@
-from video_generator import create_video, merge_videos
-
+import os
+import glob
+import re
 import requests
 from urllib.parse import quote
+from dotenv import load_dotenv
 from text_to_speech import text_to_speech
-
-from video_generator import create_video
-from summary_generator import generate_summary
-from flowchart_generator import create_flowchart
-print("SCENE_GENERATOR LOADED")
-
-PEXELS_API_KEY = ""
-
+load_dotenv()
+PEXELS_API_KEY = os.getenv("PEXELS_API_KEY")
+print("PEXELS KEY:", PEXELS_API_KEY)
 
 def get_image(keyword):
 
@@ -19,166 +16,139 @@ def get_image(keyword):
     headers = {
         "Authorization": PEXELS_API_KEY
     }
-    print("CALLING PEXELS...")
 
-    response = requests.get(url, headers=headers)
-    print("PEXELS RESPONSE RECEIVED")
+    response = requests.get(
+        url,
+        headers=headers
+    )
+
+
+    if response.status_code != 200:
+
+        return "https://picsum.photos/800/500"
 
     data = response.json()
 
-    print("KEYWORD:", keyword)
-    print("RESULT:", data)
-
     if data.get("photos"):
-        return data["photos"][0]["src"]["medium"]
 
-    return "https://picsum.photos/600/400"
+        image_url = data["photos"][0]["src"]["large"]
+
+        
+
+        return image_url
+
+    return "https://picsum.photos/800/500"
 
 
 def generate_scenes(text):
-    import glob
-    import os
-    import time
 
-    for file in glob.glob("scene_*.jpg"):
-        os.remove(file)
+    
 
-    for file in glob.glob("scene_*.mp4"):
-
-        os.remove(file)
-
+    # Delete old audio
     for file in glob.glob("audio/scene_*.mp3"):
+        try:
+            os.remove(file)
+        except:
+            pass
 
-        os.remove(file)
-
+    # Split slides
     slides = [
-        slide.strip()
-        for slide in text.split("===SLIDE===")
-        if slide.strip()
+        s.strip()
+        for s in text.split("===SLIDE===")
+        if s.strip()
     ]
-    print("TOTAL SLIDES FOUND:", len(slides))
 
     scenes = []
-    video_files = []
-    for i, slide in enumerate(slides):
 
-        import re
+    for i, slide in enumerate(slides):
 
         clean_slide = slide.replace("\x0b", "\n")
 
         lines = [
-    line.strip()
-    for line in re.split(r'[\n\r]+', clean_slide)
-    if line.strip()
-]
-
-        print("LINES:", lines)
+            line.strip()
+            for line in re.split(r'[\n\r]+', clean_slide)
+            if line.strip()
+        ]
 
         if not lines:
-           continue
+            continue
 
+        # Title
         if len(lines) >= 2:
-         
-
-         title = lines[0]
-         subtitle = " ".join(lines[1:])
-
+            title = lines[0]
+            subtitle = " ".join(lines[1:])
         else:
+            title = f"Scene {i+1}"
+            subtitle = lines[0]
+        search_text = subtitle[:50]
 
-         title = f"Scene {i+1}"
-         subtitle = lines[0]
+        image_url = get_image(search_text)
 
-        print("SCENE:", i + 1)
-        print("TITLE:", title)
-        print("SUBTITLE:", subtitle)
+         # Generate learning points
 
-        keyword = (title + " " + subtitle)[:100]
+        content_text = " ".join(lines[1:])
 
-        summary_text = generate_summary("\n".join(lines))
+        # Split by sentences
+        points = re.split(r'[.!?]+', content_text)
+
+        points = [
+            p.strip()
+            for p in points
+            if len(p.strip()) > 10
+        ]
+
+        # If only one huge paragraph,
+        # split every 15 words
+        if len(points) <= 1:
+
+            words = content_text.split()
+
+            points = []
+
+            chunk_size = 15
+
+            for j in range(0, len(words), chunk_size):
+
+                chunk = " ".join(
+                    words[j:j + chunk_size]
+                )
+
+                if chunk.strip():
+                    points.append(chunk)
+
+        # Final fallback
+        if not points:
+            points = [subtitle]
+
         
+        #  Generate narration audio
+        
+        summary_text = "\n".join(
+            ["• " + p for p in points]
+        )
 
-        points = []
-
-        for line in summary_text.split("\n"):
-           
-
-            line = line.replace("•", "").strip()
-
-            if line:
-                points.append(line)
-        print("SUMMARY:")
-        print(summary_text)
-
-        print("SUMMARY TEXT:")
-        print(summary_text)
-        print("SUMMARY REPR:")
-        print(repr(summary_text))
-
-        voice_text = summary_text
-        print("VOICE TEXT FULL:")
-        print(repr(voice_text))
-
-        print("VOICE TEXT:")
-        print(voice_text)
-
-        import time
-
-        start = time.time()
+        if not summary_text.strip():
+            summary_text = "Educational content from this slide."
 
         audio_file = text_to_speech(
-    voice_text,
-    f"scene_{i+1}.mp3"
-)
+            summary_text,
+            f"scene_{i+1}.mp3"
+        )
 
-        print("TTS TIME:", time.time() - start)
-
-        video_file = f"scene_{i+1}.mp4"
-
-        image_file = f"scene_{i+1}.jpg"
-
-        create_flowchart(
-    points,
-    image_file
-)
-
-        image_url = image_file
-
-        start = time.time()
-
-        create_video(
-    image_file,
-    audio_file,
-    video_file,
-    voice_text
-)
-
-        print("VIDEO TIME:", time.time() - start)
-
+    
+        # Create scene data
+        
+        
         scene = {
-    "scene": i + 1,
-    "title": title,
-    "subtitle": subtitle,
-    "full_content": slide,
-
-        "voice_text": voice_text,
-        "audio_file": audio_file,
-        "image_prompt": f"Educational illustration of {title}",
-        "keyword": keyword,
-        "image_url": image_url
-    }
-        print("FINAL SCENE DATA")
-        print("TITLE =", title)
-        print("SUBTITLE =", subtitle[:100])
+            "scene": i + 1,
+            "title": title,
+            "subtitle": subtitle,
+            "full_content": slide,
+            "voice_text": summary_text,
+            "audio_file": os.path.basename(audio_file),
+            "image_url": image_url
+        }
 
         scenes.append(scene)
-        video_files.append(video_file)
-
-    if len(video_files) > 0:
-
-        merge_videos(
-        video_files,
-        "final_video.mp4"
-    )
 
     return scenes
-   

@@ -4,57 +4,33 @@ def generate_summary(text):
 
     text = text.replace("\x0b", " ")
 
-    sentences = re.split(r'[.!?]', text)
+    lines = [
+        line.strip()
+        for line in re.split(r'[\n\r]+', text)
+        if line.strip()
+    ]
 
     points = []
 
-    keywords = [
-        "is",
-        "are",
-        "can",
-        "used",
-        "helps",
-        "provides",
-        "includes",
-        "allows",
-        "important",
-        "benefits"
-    ]
+    for line in lines:
 
-    for sentence in sentences:
-
-        sentence = sentence.strip()
-
-        if len(sentence) < 20:
+        if len(line) < 15:
             continue
 
-        if any(word in sentence.lower() for word in keywords):
+        line = line.replace("•", "")
 
-            if ":" in sentence:
-                sentence = sentence.split(":")[0]
+        words = line.split()
 
-            sentence = " ".join(sentence.split()[:15])
+        if len(words) > 30:
+            line = " ".join(words[:30])
 
-            points.append("• " + sentence)
+        points.append("• " + line)
 
-        if len(points) >= 3:
+        if len(points) >= 4:
             break
 
     if not points:
 
-        for sentence in sentences:
-
-            sentence = sentence.strip()
-
-            if len(sentence) > 20:
-
-                points.append("• " + sentence[:80])
-
-            if len(points) >= 3:
-                break
+        points.append("• No content found")
 
     return "\n".join(points)
-    print("SUMMARY POINTS:")
-    for p in points:
-
-        print(repr(p))
