@@ -1,36 +1,61 @@
 # 🎓 Visual Learn AI
 
-## Overview
-
-Visual Learn AI is an AI-powered educational learning platform that converts PDF and PPT learning materials into visual educational videos.
-
-The system extracts educational content, generates key points, creates flowchart-based visualizations, adds voice narration, and produces learning videos that help students understand theory topics more effectively.
+An AI-powered educational platform that converts PDF, PPT, and TXT learning materials into visual learning scenes with AI-generated images and voice narration.
 
 ---
 
-## Features
+## 📌 Problem Statement
 
-* 📄 PDF and PPT Content Extraction
-* 📝 Key Point Generation
-* 📊 Automatic Flowchart Visualization
-* 🎤 AI Voice Narration
-* 📹 Educational Video Generation
-* 🎓 Theory-to-Visual Learning Conversion
+Traditional learning materials are often text-heavy and difficult to understand quickly. Students spend significant time reading long theoretical content without visual support.
+
+Visual Learn AI transforms educational content into visual scenes with narration, helping students learn concepts faster and more effectively.
 
 ---
 
-## Workflow
+## 🚀 Features
 
-1. Upload a PDF or PPT file
+### 📄 Content Extraction
+
+* Extracts text from PDF files
+* Extracts content from PowerPoint presentations
+* Supports TXT documents
+
+### 🧠 Smart Content Processing
+
+* Separates content slide-by-slide
+* Preserves educational structure
+* Generates scene-wise learning content
+
+### 🖼️ AI Visual Generation
+
+* Generates relevant visual representations
+* Creates image-based learning support
+
+### 🎧 Voice Narration
+
+* Converts educational content into speech
+* Generates audio for every scene
+* Improves accessibility and engagement
+
+### 🎬 Scene-Based Learning
+
+* Organizes content into individual scenes
+* Displays text, image, and narration together
+
+---
+
+## 🏗️ System Workflow
+
+1. Upload PDF / PPT / TXT file
 2. Extract educational content
-3. Generate key points from the content
-4. Create flowchart-based visual representations
-5. Generate voice narration
-6. Produce an educational learning video
+3. Split content into scenes
+4. Generate relevant images
+5. Generate narration audio
+6. Display interactive visual learning scenes
 
 ---
 
-## Technology Stack
+## 🛠️ Technology Stack
 
 ### Frontend
 
@@ -42,39 +67,119 @@ The system extracts educational content, generates key points, creates flowchart
 
 * Python
 * Flask
+* Flask-CORS
+
+### AI & Processing
+
+* Pexels API
+* Text-to-Speech
+* PyPDF2
+* python-pptx
 
 ---
 
-## Project Structure
+## 📂 Project Structure
 
-Visual-Learn-AI-Full/
+visual_learn_ai/
+
+├── backend/
+
+│ ├── app.py
+
+│ ├── scene_generator.py
+
+│ ├── ppt_reader.py
+
+│ ├── pdf_reader.py
+
+│ ├── text_to_speech.py
+
+│ ├── storyboard_generator.py
+
+│ └── uploads/
+
+│
 
 ├── frontend/
 
-├── backend/
+│ ├── index_new.html
+
+│ ├── style.css
+
+│ └── script.js
+
+│
 
 └── README.md
 
 ---
 
-## Project Goal
+## ⚙️ Installation
 
-Many students find it difficult to understand large amounts of theory from documents and presentations. Visual Learn AI transforms theoretical content into visual learning materials using key points, flowcharts, narration, and videos to improve understanding and retention.
+### Clone Repository
+
+git clone https://github.com/srinidhi-ili/Visual-Learn-AI-Full.git
+
+cd Visual-Learn-AI-Full
+
+### Install Dependencies
+
+pip install -r backend/requirements.txt
+
+### Configure Environment Variables
+
+Create a `.env` file inside the backend folder:
+
+PEXELS_API_KEY=YOUR_API_KEY
+
+### Run Backend
+
+cd backend
+
+python app.py
+
+### Open Frontend
+
+Open:
+
+frontend/index_new.html
+
+in your browser.
 
 ---
 
-## Future Enhancements
+## 📸 Screenshots
 
-* Advanced AI summarization
-* Interactive visual learning
-* Multiple narration voices
-* Cloud deployment
-* Enhanced storyboard generation
+### Upload Interface
+
+final.proj1.png
+
+### Generated Learning Scene
+
+final.proj2.png
+
+### Audio Narration
+
+final.proj3.png
+final.proj4.png
+
 
 ---
 
-## Author
+## 👨‍💻 Author
 
-**Srinidhi Ili**
+Srinidhi Ili
 
-B.Tech – CSE (AI & ML)
+B.Tech CSE (AI & ML)
+
+Visual Learn AI Project
+
+---
+
+## ⭐ Acknowledgements
+
+* Flask
+* Pexels API
+* PyPDF2
+* python-pptx
+* Open Source Community
