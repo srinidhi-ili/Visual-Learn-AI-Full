@@ -1,30 +1,28 @@
 from pptx import Presentation
-
-
-def extract_ppt_slides(path):
+def extract_ppt_text(path):
 
     prs = Presentation(path)
 
-    slides_data = []
+    text = ""
 
     for slide in prs.slides:
 
-        texts = []
+        text += "\n===SLIDE===\n"
+
+        slide_text = []
 
         for shape in slide.shapes:
 
-            if hasattr(shape, "text"):
+            if hasattr(shape, "text_frame") and shape.text_frame:
 
-                text = shape.text.strip()
+                for para in shape.text_frame.paragraphs:
 
-                if text:
-                    texts.append(text)
+                    line = para.text.strip()
 
-        # longest text = actual content
-        texts.sort(key=len, reverse=True)
+                    if line:
+                        slide_text.append(line)
 
-        slide_text = "\n".join(texts)
+        text += "\n".join(slide_text)
+        text += "\n"
 
-        slides_data.append(slide_text)
-
-    return slides_data
+    return text

@@ -5,9 +5,11 @@ import requests
 from urllib.parse import quote
 from dotenv import load_dotenv
 from text_to_speech import text_to_speech
+
 load_dotenv()
+
 PEXELS_API_KEY = os.getenv("PEXELS_API_KEY")
-print("PEXELS KEY:", PEXELS_API_KEY)
+
 
 def get_image(keyword):
 
@@ -17,32 +19,20 @@ def get_image(keyword):
         "Authorization": PEXELS_API_KEY
     }
 
-    response = requests.get(
-        url,
-        headers=headers
-    )
-
+    response = requests.get(url, headers=headers)
 
     if response.status_code != 200:
-
         return "https://picsum.photos/800/500"
 
     data = response.json()
 
     if data.get("photos"):
-
-        image_url = data["photos"][0]["src"]["large"]
-
-        
-
-        return image_url
+        return data["photos"][0]["src"]["large"]
 
     return "https://picsum.photos/800/500"
 
 
 def generate_scenes(text):
-
-    
 
     # Delete old audio
     for file in glob.glob("audio/scene_*.mp3"):
@@ -73,59 +63,29 @@ def generate_scenes(text):
         if not lines:
             continue
 
-        # Title
-        if len(lines) >= 2:
-            title = lines[0]
-            subtitle = " ".join(lines[1:])
+        # Full slide content
+        subtitle = " ".join(lines)
+
+        # First 2 lines used for image search
+        content_lines = lines[1:]
+
+        if len(content_lines) >= 2:
+            search_text = content_lines[0] + " " + content_lines[1]
+
+        elif len(content_lines) == 1:
+            search_text = content_lines[0]
+
         else:
-            title = f"Scene {i+1}"
-            subtitle = lines[0]
-        search_text = subtitle[:50]
+           search_text = lines[0]
+
+        search_text = search_text[:100]
+
+        print("IMAGE SEARCH:", search_text)
 
         image_url = get_image(search_text)
 
-         # Generate learning points
-
-        content_text = " ".join(lines[1:])
-
-        # Split by sentences
-        points = re.split(r'[.!?]+', content_text)
-
-        points = [
-            p.strip()
-            for p in points
-            if len(p.strip()) > 10
-        ]
-
-        # If only one huge paragraph,
-        # split every 15 words
-        if len(points) <= 1:
-
-            words = content_text.split()
-
-            points = []
-
-            chunk_size = 15
-
-            for j in range(0, len(words), chunk_size):
-
-                chunk = " ".join(
-                    words[j:j + chunk_size]
-                )
-
-                if chunk.strip():
-                    points.append(chunk)
-
-        # Final fallback
-        if not points:
-            points = [subtitle]
-
-        
-        #  Generate narration audio
-        
-        summary_text = "\n".join(
-            ["• " + p for p in points]
-        )
+        # Show entire slide content
+        summary_text = "\n".join(lines)
 
         if not summary_text.strip():
             summary_text = "Educational content from this slide."
@@ -135,13 +95,8 @@ def generate_scenes(text):
             f"scene_{i+1}.mp3"
         )
 
-    
-        # Create scene data
-        
-        
         scene = {
             "scene": i + 1,
-            "title": title,
             "subtitle": subtitle,
             "full_content": slide,
             "voice_text": summary_text,

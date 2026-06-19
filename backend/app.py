@@ -27,11 +27,7 @@ def serve_audio(filename):
     )
 
 
-@app.route("/image/<filename>")
-def serve_image(filename):
-    return send_from_directory(".", filename)
-
-
+# ---------- PPT READER ----------
 def extract_ppt_text(path):
 
     prs = Presentation(path)
@@ -42,14 +38,32 @@ def extract_ppt_text(path):
 
         text += "\n===SLIDE===\n"
 
-        for shape in slide.shapes:
+        slide_lines = []
 
-            if hasattr(shape, "text"):
-                text += shape.text + "\n"
+        # Sort shapes by vertical position (top to bottom)
+        shapes = sorted(
+            slide.shapes,
+            key=lambda s: getattr(s, "top", 0)
+        )
+
+        for shape in shapes:
+
+            if hasattr(shape, "text_frame") and shape.text_frame:
+
+                for para in shape.text_frame.paragraphs:
+
+                    line = para.text.strip()
+
+                    if line:
+                        slide_lines.append(line)
+
+        text += "\n".join(slide_lines)
+        text += "\n"
 
     return text
 
 
+# ---------- PDF READER ----------
 def extract_pdf_text(path):
 
     text = ""
@@ -68,6 +82,7 @@ def extract_pdf_text(path):
     return text
 
 
+# ---------- TXT READER ----------
 def extract_txt_text(path):
 
     with open(
