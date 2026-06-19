@@ -55,7 +55,7 @@ Visual Learn AI transforms educational content into visual scenes with narration
 
 ---
 
-## 🛠️ Technology Stack
+##  Technology Stack
 
 ### Frontend
 
@@ -78,7 +78,7 @@ Visual Learn AI transforms educational content into visual scenes with narration
 
 ---
 
-## 📂Project Structure
+## Project Structure
 
 visual_learn_ai/
 
