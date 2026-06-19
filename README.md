@@ -4,7 +4,7 @@ An AI-powered educational platform that converts PDF, PPT, and TXT learning mate
 
 ---
 
-## 📌 Problem Statement
+##  Problem Statement
 
 Traditional learning materials are often text-heavy and difficult to understand quickly. Students spend significant time reading long theoretical content without visual support.
 
@@ -12,39 +12,39 @@ Visual Learn AI transforms educational content into visual scenes with narration
 
 ---
 
-## 🚀 Features
+##  Features
 
-### 📄 Content Extraction
+###  Content Extraction
 
 * Extracts text from PDF files
 * Extracts content from PowerPoint presentations
 * Supports TXT documents
 
-### 🧠 Smart Content Processing
+###  Smart Content Processing
 
 * Separates content slide-by-slide
 * Preserves educational structure
 * Generates scene-wise learning content
 
-### 🖼️ AI Visual Generation
+###  AI Visual Generation
 
 * Generates relevant visual representations
 * Creates image-based learning support
 
-### 🎧 Voice Narration
+###  Voice Narration
 
 * Converts educational content into speech
 * Generates audio for every scene
 * Improves accessibility and engagement
 
-### 🎬 Scene-Based Learning
+###  Scene-Based Learning
 
 * Organizes content into individual scenes
 * Displays text, image, and narration together
 
 ---
 
-## 🏗️ System Workflow
+##  System Workflow
 
 1. Upload PDF / PPT / TXT file
 2. Extract educational content
@@ -78,7 +78,7 @@ Visual Learn AI transforms educational content into visual scenes with narration
 
 ---
 
-## 📂 Project Structure
+## 📂Project Structure
 
 visual_learn_ai/
 
@@ -114,7 +114,7 @@ visual_learn_ai/
 
 ---
 
-## ⚙️ Installation
+##  Installation
 
 ### Clone Repository
 
@@ -163,14 +163,14 @@ in your browser.
 ![Video Generation](final.proj4.png)
 
 ---
-## 🎥 Demo Video
+##  Demo Video
 
 Watch the project demonstration:
 
 [Visual Learn AI Demo](https://drive.google.com/file/d/1rHDGksxXhptW-DbPFCZwZBgYECfxx_t0/view?usp=sharing)
 ---
 
-## 👨‍💻 Author
+##  Author
 
 Srinidhi Ili
 
@@ -180,7 +180,7 @@ Visual Learn AI Project
 
 ---
 
-## ⭐ Acknowledgements
+## Acknowledgements
 
 * Flask
 * Pexels API
