@@ -2,6 +2,7 @@ import os
 import glob
 import re
 import requests
+import time
 from urllib.parse import quote
 from dotenv import load_dotenv
 from text_to_speech import text_to_speech
@@ -86,7 +87,9 @@ def generate_scenes(text):
 
         print("IMAGE SEARCH:", search_text)
 
+        start = time.time()
         image_url = get_image(search_text)
+        print(f"Pexels took: {time.time() - start:.2f} seconds")
 
         # Show entire slide content
         summary_text = "\n".join(lines)
@@ -94,10 +97,14 @@ def generate_scenes(text):
         if not summary_text.strip():
             summary_text = "Educational content from this slide."
 
+        start = time.time()
+
         audio_file = text_to_speech(
-            summary_text,
-            f"scene_{i+1}.mp3"
-        )
+    summary_text,
+    f"scene_{i+1}.mp3"
+)
+
+        print(f"Audio took: {time.time() - start:.2f} seconds")
 
         scene = {
             "scene": i + 1,

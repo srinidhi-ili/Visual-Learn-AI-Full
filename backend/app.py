@@ -77,6 +77,8 @@ def extract_pdf_text(path):
             page_text = page.extract_text()
 
             if page_text:
+
+                text += "\n===SLIDE===\n"
                 text += page_text + "\n"
 
     return text
