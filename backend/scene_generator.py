@@ -19,7 +19,11 @@ def get_image(keyword):
         "Authorization": PEXELS_API_KEY
     }
 
-    response = requests.get(url, headers=headers)
+    response = requests.get(
+    url,
+    headers=headers,
+    timeout=10
+)
 
     if response.status_code != 200:
         return "https://picsum.photos/800/500"
