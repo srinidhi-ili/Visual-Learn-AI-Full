@@ -72,18 +72,8 @@ def generate_scenes(text):
         subtitle = " ".join(lines)
 
         # First 2 lines used for image search
-        content_lines = lines[1:]
-
-        if len(content_lines) >= 2:
-            search_text = content_lines[0] + " " + content_lines[1]
-
-        elif len(content_lines) == 1:
-            search_text = content_lines[0]
-
-        else:
-           search_text = lines[0]
-
-        search_text = search_text[:100]
+        search_text = " ".join(lines)
+        search_text = search_text[:400]
 
         print("IMAGE SEARCH:", search_text)
 
